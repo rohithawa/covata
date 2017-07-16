@@ -18,7 +18,8 @@ public class FileService {
      * @return String[]
      */
     public Object[] getLines(final String fileName) throws CovataServicesException {
-        try (Stream<String> stream = Files.lines(Paths.get(fileName))) {
+        try {
+            final Stream<String> stream = Files.lines(Paths.get(fileName));
             return stream.toArray();
         } catch (IOException e) {
             throw new CovataServicesException("Invalid file path");
