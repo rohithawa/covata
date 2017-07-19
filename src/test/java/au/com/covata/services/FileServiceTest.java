@@ -11,6 +11,7 @@ import org.junit.runners.Parameterized;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 /**
  * Created by Rohitha Wanni Achchige on 14/7/17.
@@ -21,7 +22,7 @@ public class FileServiceTest {
     @Parameterized.Parameter
     public String filePath;
     @Parameterized.Parameter(1)
-    public Object[] expectedResult;
+    public String[] expectedResult;
     @Parameterized.Parameter(2)
     public Class<? extends Exception> expectedException;
 
@@ -30,7 +31,7 @@ public class FileServiceTest {
 
     @Parameterized.Parameters
     public static Collection paramCollection() {
-        Object[] lines = new Object[5];
+        String[] lines = new String[5];
         lines[0] = "5 5";
         lines[1] = "1 2 N";
         lines[2] = "LMLMLMLMM";
@@ -54,7 +55,7 @@ public class FileServiceTest {
         if (expectedException != null) {
             thrown.expect(expectedException);
         }
-        Object[] lines = fileService.getLines(filePath);
-        Assert.assertEquals(expectedResult.length, lines.length);
+        List<String> lines = fileService.getLines(filePath);
+        Assert.assertEquals(expectedResult.length, lines.size());
     }
 }

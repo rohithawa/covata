@@ -21,7 +21,7 @@ import java.util.Collection;
 @RunWith(Parameterized.class)
 public class RoverServiceGetCoordinateTest {
     @Parameterized.Parameter
-    public Object line;
+    public String line;
     @Parameterized.Parameter(1)
     public Coordinate expectedResult;
     @Parameterized.Parameter(2)

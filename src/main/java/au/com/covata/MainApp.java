@@ -21,12 +21,12 @@ public class MainApp {
                 throw new CovataServicesException("Please provide the file path");
             }
             final FileService fileService = new FileService();
-            final Object[] lines = fileService.getLines(args[0]);
+            final List<String> lines = fileService.getLines(args[0]);
 
-            final String[] edgeCoordinates = ((String) lines[0]).split(" ");
+            final String[] edgeCoordinates = lines.get(0).split(" ");
             final RoverService roverService = new RoverService(Integer.parseInt(edgeCoordinates[0]),
                     Integer.parseInt(edgeCoordinates[1]));
-
+            lines.remove(0);
             List<Coordinate> endCoordinates = roverService.calculateEndCoordinates(lines);
             endCoordinates.forEach(endCoordinate -> {
                 logger.info("Output:------------------");

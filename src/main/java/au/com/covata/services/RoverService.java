@@ -7,6 +7,7 @@ import au.com.covata.util.Instruction;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by Rohitha Wanni Achchige on 14/7/17.
@@ -27,14 +28,14 @@ public class RoverService {
      * @param lines - lines
      * @return List<Coordinate>
      */
-    public List<Coordinate> calculateEndCoordinates(final Object[] lines) throws CovataServicesException {
+    public List<Coordinate> calculateEndCoordinates(final List<String> lines) throws CovataServicesException {
+        List<String> direction = lines.stream().filter(line -> line.contains(" ")).collect(Collectors.toList());
+        List<String> instruction = lines.stream().filter(line -> !line.contains(" ")).collect(Collectors.toList());
         final List<Coordinate> coordinates = new ArrayList<>();
-        for (int i = 0; i < lines.length; i++) {
-            if (i > 0 && i % 2 != 0) {
-                final Coordinate coordinate = getCoordinate(lines[i]);
-                final Instruction[] instructions = getInstructions(lines[i + 1]);
-                coordinates.add(calculateEndCoordinate(coordinate, instructions));
-            }
+        for (int i = 0; i < direction.size(); i++) {
+            final Coordinate coordinate = getCoordinate(direction.get(i));
+            final List<Instruction> instructions = getInstructions(instruction.get(i));
+            coordinates.add(calculateEndCoordinate(coordinate, instructions));
         }
         return coordinates;
     }
@@ -45,12 +46,12 @@ public class RoverService {
      * @param line   - instruction string
      * @return Instruction[]
      */
-    protected Instruction[] getInstructions(Object line) throws CovataServicesException {
-        char[] chars = ((String) line).toCharArray();
-        final Instruction[] instructions = new Instruction[chars.length];
+    protected List<Instruction> getInstructions(String line) throws CovataServicesException {
+        char[] chars = line.toCharArray();
+        final List<Instruction> instructions = new ArrayList<>();
         try {
-            for (int j = 0; j < chars.length; j++) {
-                instructions[j] = Instruction.valueOf(String.valueOf(chars[j]));
+            for (char aChar : chars) {
+                instructions.add(Instruction.valueOf(String.valueOf(aChar)));
             }
         } catch (IllegalArgumentException e) {
             throw new CovataServicesException("Invalid instruction provided");
@@ -64,9 +65,9 @@ public class RoverService {
      * @param line   - instruction string
      * @return Coordinate
      */
-    protected Coordinate getCoordinate(Object line) throws CovataServicesException {
+    protected Coordinate getCoordinate(String line) throws CovataServicesException {
         try {
-            final String[] coordinateStrings = ((String) line).split(" ");
+            final String[] coordinateStrings = line.split(" ");
             return new Coordinate(Integer.parseInt(coordinateStrings[0]),
                     Integer.parseInt(coordinateStrings[1]), Direction.valueOf(coordinateStrings[2]));
         } catch (IllegalArgumentException e) {
@@ -81,7 +82,7 @@ public class RoverService {
      * @param instructions - instructions
      * @return Coordinate
      */
-    protected Coordinate calculateEndCoordinate(final Coordinate startPoint, final Instruction[] instructions) throws CovataServicesException {
+    protected Coordinate calculateEndCoordinate(final Coordinate startPoint, final List<Instruction> instructions) throws CovataServicesException {
         int x = startPoint.getX();
         int y = startPoint.getY();
         Direction direction = startPoint.getDirection();
@@ -91,9 +92,11 @@ public class RoverService {
             switch (instruction) {
                 case L:
                     direction = getNextDirectionForLeftTurn(direction);
+                    endPoint = new Coordinate(x, y, direction);
                     break;
                 case R:
                     direction = getNextDirectionForRightTurn(direction);
+                    endPoint = new Coordinate(x, y, direction);
                     break;
                 default:
                     endPoint = getNextCoordinate(x, y, direction);

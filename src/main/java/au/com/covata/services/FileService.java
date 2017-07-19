@@ -5,6 +5,10 @@ import au.com.covata.exceptions.CovataServicesException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -17,10 +21,10 @@ public class FileService {
      *
      * @return String[]
      */
-    public Object[] getLines(final String fileName) throws CovataServicesException {
+    public List<String> getLines(final String fileName) throws CovataServicesException {
         try {
             final Stream<String> stream = Files.lines(Paths.get(fileName));
-            return stream.toArray();
+            return stream.collect(Collectors.toList());
         } catch (IOException e) {
             throw new CovataServicesException("Invalid file path");
         }

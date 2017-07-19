@@ -21,18 +21,17 @@ import java.util.List;
 @RunWith(Parameterized.class)
 public class RoverServiceCalculateEndCoordinatesTest {
     @Parameterized.Parameter
-    public Object[] lines;
+    public List<String> lines;
     @Parameterized.Parameter(1)
     public List<Coordinate> expectedResult;
 
     @Parameterized.Parameters
     public static Collection paramCollection() {
-        Object[] lines = new Object[5];
-        lines[0] = "5 5";
-        lines[1] = "1 2 N";
-        lines[2] = "LMLMLMLMM";
-        lines[3] = "3 3 E";
-        lines[4] = "MMRMMRMRRM";
+        List<String> lines = new ArrayList<>();
+        lines.add("1 2 N");
+        lines.add("LMLMLMLMM");
+        lines.add("3 3 E");
+        lines.add("MMRMMRMRRM");
         List<Coordinate> coordinates = new ArrayList<>();
         coordinates.add(new Coordinate(1, 3, Direction.N));
         coordinates.add(new Coordinate(5, 1, Direction.E));

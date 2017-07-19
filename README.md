@@ -52,6 +52,10 @@ Expected Output:
 
 5 1 E
 
+Basically assessment contains 2 service classes name FileService and RoverService. 
+- FileService is responsible for read the file and return lines as Object array.
+- RoverService is responsible for calculate end coordinate by providing start coordinate and instruction
+
 #Assumptions
 - Instruction not given for collide the rovers
 - Given file contain complete and valid information 
@@ -64,6 +68,7 @@ Package - au.com.covata
 - Maven
 - junit
 - cobertura
+- Log4j
 
 #How to build the application
 ```

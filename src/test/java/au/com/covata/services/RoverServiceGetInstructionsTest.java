@@ -10,8 +10,10 @@ import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 /**
  * Created by Rohitha Wanni Achchige on 14/7/17.
@@ -20,9 +22,9 @@ import java.util.Collection;
 @RunWith(Parameterized.class)
 public class RoverServiceGetInstructionsTest {
     @Parameterized.Parameter
-    public Object line;
+    public String line;
     @Parameterized.Parameter(1)
-    public Instruction[] expectedResult;
+    public List<Instruction> expectedResult;
     @Parameterized.Parameter(2)
     public Class<? extends Exception> expectedException;
 
@@ -31,9 +33,30 @@ public class RoverServiceGetInstructionsTest {
 
     @Parameterized.Parameters
     public static Collection paramCollection() {
+        List<Instruction> instructions1 = new ArrayList<>();
+        instructions1.add(Instruction.L);
+        instructions1.add(Instruction.M);
+        instructions1.add(Instruction.L);
+        instructions1.add(Instruction.M);
+        instructions1.add(Instruction.L);
+        instructions1.add(Instruction.M);
+        instructions1.add(Instruction.L);
+        instructions1.add(Instruction.M);
+        instructions1.add(Instruction.M);
+        List<Instruction> instructions2 = new ArrayList<>();
+        instructions2.add(Instruction.M);
+        instructions2.add(Instruction.M);
+        instructions2.add(Instruction.R);
+        instructions2.add(Instruction.M);
+        instructions2.add(Instruction.M);
+        instructions2.add(Instruction.R);
+        instructions2.add(Instruction.M);
+        instructions2.add(Instruction.R);
+        instructions2.add(Instruction.R);
+        instructions2.add(Instruction.M);
         return Arrays.asList(new Object[][]{
-                {"LMLMLMLMM", new Instruction[]{Instruction.L, Instruction.M, Instruction.L, Instruction.M, Instruction.L, Instruction.M, Instruction.L, Instruction.M, Instruction.M}, null},
-                {"MMRMMRMRRM", new Instruction[]{Instruction.M, Instruction.M, Instruction.R, Instruction.M, Instruction.M, Instruction.R, Instruction.M, Instruction.R, Instruction.R, Instruction.M}, null},
+                {"LMLMLMLMM", instructions1, null},
+                {"MMRMMRMRRM", instructions2, null},
                 {"MMRMMRMRRP", null, CovataServicesException.class}
         });
     }
@@ -50,7 +73,7 @@ public class RoverServiceGetInstructionsTest {
         if (expectedException != null) {
             thrown.expect(expectedException);
         }
-        Instruction[] instructions = roverService.getInstructions(line);
-        Assert.assertEquals(expectedResult.length, instructions.length);
+        List<Instruction> instructions = roverService.getInstructions(line);
+        Assert.assertEquals(expectedResult.size(), instructions.size());
     }
 }
