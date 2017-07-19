@@ -9,6 +9,7 @@ import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -22,7 +23,7 @@ public class FileServiceTest {
     @Parameterized.Parameter
     public String filePath;
     @Parameterized.Parameter(1)
-    public String[] expectedResult;
+    public List<String> expectedResult;
     @Parameterized.Parameter(2)
     public Class<? extends Exception> expectedException;
 
@@ -31,12 +32,12 @@ public class FileServiceTest {
 
     @Parameterized.Parameters
     public static Collection paramCollection() {
-        String[] lines = new String[5];
-        lines[0] = "5 5";
-        lines[1] = "1 2 N";
-        lines[2] = "LMLMLMLMM";
-        lines[3] = "3 3 E";
-        lines[4] = "MMRMMRMRRM";
+        List<String> lines = new ArrayList<>();
+        lines.add("5 5");
+        lines.add("1 2 N");
+        lines.add("LMLMLMLMM");
+        lines.add("3 3 E");
+        lines.add("MMRMMRMRRM");
         return Arrays.asList(new Object[][]{
                 {"instruction1.txt", null, CovataServicesException.class},
                 {"instruction.txt", lines, null}
@@ -56,6 +57,6 @@ public class FileServiceTest {
             thrown.expect(expectedException);
         }
         List<String> lines = fileService.getLines(filePath);
-        Assert.assertEquals(expectedResult.length, lines.size());
+        Assert.assertEquals(expectedResult.size(), lines.size());
     }
 }
