@@ -22,8 +22,14 @@ public class MainApp {
             }
             final FileService fileService = new FileService();
             final List<String> lines = fileService.getLines(args[0]);
+            if (lines == null || lines.size() < 3 || lines.size() % 2 == 0){
+                throw new CovataServicesException("Invalid file format");
+            }
 
             final String[] edgeCoordinates = lines.get(0).split(" ");
+            if (edgeCoordinates.length != 2){
+                throw new CovataServicesException("Invalid edge coordinates");
+            }
             final RoverService roverService = new RoverService(Integer.parseInt(edgeCoordinates[0]),
                     Integer.parseInt(edgeCoordinates[1]));
             lines.remove(0);
@@ -34,6 +40,8 @@ public class MainApp {
                 logger.info("-------------------------");
             });
 
+        } catch (NumberFormatException e) {
+            logger.error("Invalid edge coordinates");
         } catch (CovataServicesException e) {
             logger.error(e.getErrorMessage());
         }
